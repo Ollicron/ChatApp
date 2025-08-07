@@ -20,7 +20,6 @@ proc createMessage*(username,message:string): string=
         }
     )
 
-
 when isMainModule:
     block:
         let data = """{"username": "John", "message":"Hi!"}"""
