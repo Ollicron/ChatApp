@@ -7,6 +7,7 @@ type
         id: int
         connected: bool
 
+    # Personally I'm not a fan of putting sequences like this in an object
     Server = ref object
         socket: AsyncSocket
         clients: seq[Client]
@@ -45,6 +46,11 @@ proc acceptConnections(server: Server){.async.} =
 
     echo("Number of clients: ", server.clients.len())
 
+# A function to broadcast any received messages to the clients
+proc broadcastMessage(message: string,server:Server){.async.}=
+    for client in server.clients:
+        asyncCheck client.socket.send(message & "\c\L")
+
 # We need to process messages from clients. To do this we need to to ingest data from their sockets.
 proc processMessages(server: Server, clientIndex:int) {.async.}=
     while true:
@@ -57,6 +63,8 @@ proc processMessages(server: Server, clientIndex:int) {.async.}=
             echo("Number of clients left:", server.clients.len)
             break
 
+        asyncCheck broadcastMessage(message,server)
+
 proc main(){.async.} =
     var someServer = makeNewServer()
 
@@ -68,4 +76,5 @@ proc main(){.async.} =
             for i in 0 .. someServer.clients.len()-1:
                 asyncCheck processMessages(someServer, i)
 
-asyncCheck main()
+
+waitFor main()
