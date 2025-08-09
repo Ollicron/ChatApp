@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Ollicron/ChatApp">
-    <img src="images/Screenshot.png" alt="Logo">
+    <img src="images/screenshot.png" alt="Logo">
   </a>
 </div>
 
