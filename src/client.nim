@@ -28,10 +28,9 @@ proc connectToServer(address:string):Future[AsyncSocket] {.async.}=
 proc recvMessage(clientSocket: AsyncSocket) {.async.}=
     let temp = openAsync("/dev/stdout", fmWrite)
     while true:
-        asyncCheck write(temp,"\r")
         let incomingMessage = await clientSocket.recvLine()
         echo incomingMessage
-        asyncCheck write(temp, ">")
+        asyncCheck write(temp,"\n>")
         
 
 #[ Sending Messages ]#
@@ -52,7 +51,6 @@ proc sendMessage(clientSocket:AsyncSocket) {.async.} =
         #Construct the message here
         let message = await takeInput()
         asyncCheck send(clientSocket, message & "\c\L")
-        echo "message sent!"
 
 
 #[ Main ]#
